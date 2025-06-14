@@ -29,72 +29,8 @@ printf("\n +-------+-------+-------+\n");
         }
         printf(" |\n");
         if (i % 3 == 2) printf(" +-------+-------+-------+\n");
-    }
-}
 ```
 ## 程式碼1-3
-```c
-#include <stdio.h>
-int board[9][9] = {
-    {0, 0, 0, 0, 0, 0, 0, 9, 0},
-    {1, 9, 0, 4, 7, 0, 6, 0, 8},
-    {0, 5, 2, 8, 1, 9, 4, 0, 7},
-    {2, 0, 0, 0, 4, 8, 0, 0, 0},
-    {0, 0, 9, 0, 0, 0, 5, 0, 0},
-    {0, 0, 0, 7, 5, 0, 0, 0, 9},
-    {9, 0, 7, 3, 6, 4, 1, 8, 0},
-    {5, 0, 6, 0, 8, 1, 0, 7, 4},
-    {0, 8, 0, 0, 0, 0, 0, 0, 0}
-};
-void save_to_text_file(int board[][9], const char* filename) {
-    FILE *fp = fopen(filename, "w");
-    if (fp == NULL) {
-        printf("無法開啟檔案 %s 進行寫入\n", filename);
-        return;
-    }
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
-            if (board[i][j] == 0) {
-                fprintf(fp, ".");
-            } else {
-                fprintf(fp, "%d", board[i][j]);
-            }
-        }
-        fprintf(fp, "\n");
-    }
-    fclose(fp);
-    printf("已成功儲存到 %s\n", filename);
-}
-int read_from_text_file(int board[][9], const char* filename) {
-    FILE *fp = fopen(filename, "r");
-    if (fp == NULL) {
-        printf("無法開啟檔案 %s 進行讀取\n", filename);
-        return 0;
-    }
-    char line[20];
-    int row = 0;
-    while (row < 9 && fgets(line, sizeof(line), fp) != NULL) {
-        for (int col = 0; col < 9; col++) {
-            if (line[col] == '.') {
-                board[row][col] = 0;
-            } else if (line[col] >= '1' && line[col] <= '9') {
-                board[row][col] = line[col] - '0';
-            }
-        }
-        row++;
-    }
-    fclose(fp);
-
-    if (row < 9) {
-        printf("警告：檔案格式不正確或檔案不完整\n");
-        return 0;
-    }
-
-    printf("已成功從 %s 讀取數獨盤面\n", filename);
-    return 1;
-}
-```
-## 程式碼1-4
 ```c
 int count_empty_cells(int puzzle[][9]) {
     int count = 0;
@@ -108,7 +44,7 @@ int count_empty_cells(int puzzle[][9]) {
     return count;
 }
 ```
-## 程式碼1-5
+## 程式碼1-4
 ```c
 int solve(int puzzle[][9], int pos) {
     if (pos == 81) {
@@ -131,7 +67,7 @@ int solve(int puzzle[][9], int pos) {
     return 0;
 }
 ```
-## 程式碼1-6
+## 程式碼1-5
 ```c
 int is_valid_solution(int puzzle[][9]) {
     int seen[10];
@@ -171,4 +107,42 @@ int is_valid_solution(int puzzle[][9]) {
     }
     return 1;
 }
+```
+## 程式碼2-1
+```c
+void generateAnswer(int answer[]) {
+    int used[10] = {0};// 標記是否使用過
+    int count = 0;
+
+    while (count < 4) {
+        int digit = rand() % 10;
+        if (!used[digit]) {
+            answer[count] = digit;
+            used[digit] = 1;
+            count++;
+        }
+    }
+}
+```
+## 程式碼2-2
+```c
+int getGuess(int guess[]) {
+    char input[10];
+    printf("請輸入4個不重複的數字：");
+    scanf("%s", input);
+
+    int used[10] = {0};
+    for (int i = 0; i < 4; i++) {
+        if (input[i] < '0' || input[i] > '9') return 0;
+        int digit = input[i] - '0';
+        if (used[digit]) return 0;
+        used[digit] = 1;
+        guess[i] = digit;
+    }
+    return 1;  // 成功
+}
+```
+## 程式碼2-3
+```c
+
 ```
